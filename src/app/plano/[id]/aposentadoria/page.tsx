@@ -13,10 +13,10 @@ import {
   Legend,
 } from "recharts";
 import { HydrationBoundary } from "@/components/ui/hydration-boundary";
+import { CurrencyInput } from "@/components/ui/currency-input";
 import { usePlanStore } from "@/store/usePlanStore";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectOption } from "@/components/ui/select";
@@ -27,18 +27,7 @@ import { simulateRetirement, compareVGBLvsPGBL, generateRetirementChart } from "
 import type { RetirementPhase, PensionCombined, TaxRegime } from "@/store/types";
 
 function NumInput({ value, onChange, className, suffix }: { value: number; onChange: (v: number) => void; className?: string; suffix?: string }) {
-  return (
-    <div className="relative flex items-center">
-      <input
-        type="number"
-        step="any"
-        value={value}
-        className={`flex h-8 w-full rounded-md border border-[hsl(var(--input))] px-2 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[hsl(var(--ring))] ${suffix ? "pr-8" : ""} ${className ?? ""}`}
-        onChange={(e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) onChange(v); }}
-      />
-      {suffix && <span className="pointer-events-none absolute right-2 text-xs text-[hsl(var(--muted-foreground))]">{suffix}</span>}
-    </div>
-  );
+  return <CurrencyInput value={value} onChange={onChange} suffix={suffix} className={`h-8 ${className ?? ""}`} />;
 }
 
 const PENSION_TYPES: PensionCombined[] = [
@@ -249,6 +238,7 @@ export default function AposentadoriaPage() {
   }
 
   return (
+    <HydrationBoundary>
     <div className="space-y-6">
       <ModuleHeader title="Aposentadoria" description="Planejamento de previdência e outros investimentos." />
 
@@ -407,5 +397,6 @@ export default function AposentadoriaPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </HydrationBoundary>
   );
 }

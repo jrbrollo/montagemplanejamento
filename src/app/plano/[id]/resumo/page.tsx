@@ -76,6 +76,7 @@ export default function ResumoPage() {
     (otherResult?.total.estimatedMonthlyIncome ?? 0);
 
   return (
+    <HydrationBoundary>
     <div className="space-y-8">
       <ModuleHeader title="Resumo" description="Visão consolidada do planejamento financeiro." />
 
@@ -217,5 +218,6 @@ export default function ResumoPage() {
         </Card>
       )}
     </div>
+    </HydrationBoundary>
   );
 }

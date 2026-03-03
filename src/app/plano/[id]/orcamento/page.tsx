@@ -1,8 +1,8 @@
 "use client";
-import { useMemo } from "react";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { nanoid } from "nanoid";
 import { HydrationBoundary } from "@/components/ui/hydration-boundary";
+import { CurrencyInput } from "@/components/ui/currency-input";
 import { usePlanStore } from "@/store/usePlanStore";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,15 +13,7 @@ import { formatCurrency, formatPercent } from "@/lib/formatters";
 import type { BudgetLine, BudgetSide } from "@/store/types";
 
 function NumInput({ value, onChange }: { value: number; onChange: (v: number) => void }) {
-  return (
-    <input
-      type="number"
-      step="any"
-      value={value}
-      className="flex h-8 w-full rounded-md border border-[hsl(var(--input))] px-2 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[hsl(var(--ring))]"
-      onChange={(e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) onChange(v); }}
-    />
-  );
+  return <CurrencyInput value={value} onChange={onChange} className="h-8" />;
 }
 
 interface BudgetSectionProps {
@@ -169,9 +161,10 @@ export default function OrcamentoPage() {
   const { getActivePlan, updateBudget } = usePlanStore();
   const plan = getActivePlan();
 
-  if (!plan) return <div className="text-center py-20 text-[hsl(var(--muted-foreground))]">Planejamento não encontrado.</div>;
+  if (!plan) return <HydrationBoundary><div className="text-center py-20 text-[hsl(var(--muted-foreground))]">Planejamento não encontrado.</div></HydrationBoundary>;
 
   return (
+    <HydrationBoundary>
     <div className="space-y-6">
       <ModuleHeader
         title="Orçamento"
@@ -190,5 +183,6 @@ export default function OrcamentoPage() {
         />
       </div>
     </div>
+    </HydrationBoundary>
   );
 }

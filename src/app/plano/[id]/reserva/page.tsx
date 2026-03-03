@@ -22,6 +22,7 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectOption } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatRateAM, formatPercent } from "@/lib/formatters";
+import { CurrencyInput } from "@/components/ui/currency-input";
 import { simulateAccumulation, generateAccumulationChart } from "@/lib/engine/emergency";
 import type { ReserveAsset, AccumulationPhase, ReserveStage } from "@/store/types";
 
@@ -32,22 +33,14 @@ const STAGE_LABELS: Record<ReserveStage, string> = {
 };
 
 function NumInput({ value, onChange, className }: { value: number; onChange: (v: number) => void; className?: string }) {
-  return (
-    <input
-      type="number"
-      step="any"
-      value={value}
-      className={`flex h-8 w-full rounded-md border border-[hsl(var(--input))] px-2 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[hsl(var(--ring))] ${className ?? ""}`}
-      onChange={(e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) onChange(v); }}
-    />
-  );
+  return <CurrencyInput value={value} onChange={onChange} className={`h-8 ${className ?? ""}`} />;
 }
 
 export default function ReservaPage() {
   const { getActivePlan, updateEmergencyReserve } = usePlanStore();
   const plan = getActivePlan();
 
-  if (!plan) return <div className="text-center py-20 text-[hsl(var(--muted-foreground))]">Planejamento não encontrado.</div>;
+  if (!plan) return <HydrationBoundary><div className="text-center py-20 text-[hsl(var(--muted-foreground))]">Planejamento não encontrado.</div></HydrationBoundary>;
 
   const { emergencyReserve: er, indicators, client } = plan;
 
@@ -100,6 +93,7 @@ export default function ReservaPage() {
   if (client.hasDependents) factors.push(`Dependentes (+3)`);
 
   return (
+    <HydrationBoundary>
     <div className="space-y-8">
       <ModuleHeader
         title="Reserva de Emergência"
@@ -340,5 +334,6 @@ export default function ReservaPage() {
         </CardContent>
       </Card>
     </div>
+    </HydrationBoundary>
   );
 }
