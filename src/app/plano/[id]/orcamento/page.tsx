@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { nanoid } from "nanoid";
+import { HydrationBoundary } from "@/components/ui/hydration-boundary";
 import { usePlanStore } from "@/store/usePlanStore";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

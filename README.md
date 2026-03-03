@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Montagem de Planejamento Financeiro
 
-## Getting Started
+Sistema web de planejamento financeiro pessoal para planejadores. Substitui planilha Excel complexa de 37 abas.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) + **TypeScript** strict
+- **Tailwind CSS** + componentes UI próprios
+- **Zustand** (estado global + persistência localStorage)
+- **Recharts** (gráficos)
+- **Sem backend** — dados salvos no localStorage do navegador
+
+## Módulos
+
+| Módulo | Descrição |
+|--------|-----------|
+| Overview | Indicadores de mercado, dados pessoais, rendas, benefícios, objetivos, patrimônio |
+| Orçamento | Fluxo de caixa atual vs sugerido com saldo automático |
+| Reserva de Emergência | Multiplicador por perfil, simulação multi-fase, gráfico de evolução |
+| Aposentadoria | Previdência (VGBL/PGBL), outros investimentos, comparação, IR regressivo |
+| Resumo | Diagnóstico, barras de progresso, timeline do patrimônio |
+
+## Engine Financeira
+
+- `rates.ts` — CDI, taxas de curto/médio/longo prazo derivadas da Selic
+- `compound.ts` — `futureValue()` e `payment()` idênticos às funções FV/PMT do Excel
+- `emergency.ts` — multiplicador inteligente (3 + 3×fatores de risco), simulação de acúmulo
+- `retirement.ts` — simulação multi-fase, alíquota IR regressiva ponderada por fase, VGBL vs PGBL
+- `tax.ts` — tabela regressiva completa, alíquota efetiva para múltiplas fases
+
+## Desenvolvimento
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Persistência
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Dados salvos automaticamente no `localStorage` com a chave `brauna-planner-data`. Múltiplos planejamentos suportados simultaneamente.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

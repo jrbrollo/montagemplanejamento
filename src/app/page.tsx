@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PlusCircle, Trash2, ChevronRight, TrendingUp, Calendar } from "lucide-react";
 import { usePlanStore } from "@/store/usePlanStore";
+import { HydrationBoundary } from "@/components/ui/hydration-boundary";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -70,6 +71,7 @@ export default function Home() {
 
       {/* Main */}
       <main className="max-w-5xl mx-auto px-6 py-8">
+        <HydrationBoundary>
         {plans.length === 0 ? (
           <div className="text-center py-20">
             <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
@@ -165,6 +167,7 @@ export default function Home() {
             </div>
           </div>
         )}
+        </HydrationBoundary>
       </main>
 
       {/* Modal: Criar novo planejamento */}

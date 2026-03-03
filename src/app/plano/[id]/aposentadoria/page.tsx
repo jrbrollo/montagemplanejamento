@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { HydrationBoundary } from "@/components/ui/hydration-boundary";
 import { usePlanStore } from "@/store/usePlanStore";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

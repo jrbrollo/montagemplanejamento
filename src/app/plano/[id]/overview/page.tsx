@@ -1,5 +1,4 @@
 "use client";
-import { useMemo } from "react";
 import { PlusCircle, Trash2, Info } from "lucide-react";
 import { nanoid } from "nanoid";
 import { usePlanStore } from "@/store/usePlanStore";
@@ -8,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { HydrationBoundary } from "@/components/ui/hydration-boundary";
+import { CurrencyInput } from "@/components/ui/currency-input";
 import { Select, SelectOption } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
@@ -23,7 +24,7 @@ import type {
   ObjectivePriority,
 } from "@/store/types";
 
-// Input numérico simples (armazena como decimal)
+// Alias local para CurrencyInput com prop isPercent → asPercent
 function NumInput({
   value,
   onChange,
@@ -41,27 +42,17 @@ function NumInput({
   isPercent?: boolean;
   disabled?: boolean;
 }) {
-  const display = isPercent ? (value * 100).toFixed(2) : value.toString();
   return (
-    <div className={`relative flex items-center ${className ?? ""}`}>
-      <input
-        type="number"
-        step={isPercent ? "0.01" : "any"}
-        value={display}
-        disabled={disabled}
-        placeholder={placeholder}
-        className={`flex h-9 w-full rounded-md border border-[hsl(var(--input))] px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[hsl(var(--ring))] disabled:bg-[hsl(var(--muted))] disabled:opacity-70 ${suffix ? "pr-12" : ""}`}
-        onChange={(e) => {
-          const v = parseFloat(e.target.value);
-          if (!isNaN(v)) onChange(isPercent ? v / 100 : v);
-        }}
-      />
-      {suffix && (
-        <span className="pointer-events-none absolute right-3 text-xs text-[hsl(var(--muted-foreground))]">
-          {suffix}
-        </span>
-      )}
-    </div>
+    <CurrencyInput
+      value={value}
+      onChange={onChange}
+      suffix={suffix}
+      placeholder={placeholder}
+      className={className}
+      asPercent={isPercent}
+      disabled={disabled}
+      decimals={isPercent ? 2 : 2}
+    />
   );
 }
 
@@ -69,7 +60,11 @@ export default function OverviewPage() {
   const { getActivePlan, updateClient, updateIndicators } = usePlanStore();
   const plan = getActivePlan();
 
-  if (!plan) return <div className="text-center py-20 text-[hsl(var(--muted-foreground))]">Planejamento não encontrado.</div>;
+  if (!plan) return (
+    <HydrationBoundary>
+      <div className="text-center py-20 text-[hsl(var(--muted-foreground))]">Planejamento não encontrado.</div>
+    </HydrationBoundary>
+  );
 
   const { client, indicators } = plan;
 
@@ -150,6 +145,7 @@ export default function OverviewPage() {
   const totalIncome = client.incomes.reduce((s, i) => s + i.grossValue, 0);
 
   return (
+    <HydrationBoundary>
     <div className="space-y-8">
       <ModuleHeader
         title="Overview"
@@ -594,5 +590,6 @@ export default function OverviewPage() {
         </CardContent>
       </Card>
     </div>
+    </HydrationBoundary>
   );
 }
